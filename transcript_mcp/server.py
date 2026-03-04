@@ -70,20 +70,35 @@ def get_video_info(url: str) -> dict:
 
 def download_audio(url: str, output_path: str) -> dict:
     """Download YouTube audio to a file"""
+    import shutil
     try:
-        # Use best audio quality, extract to mp3
+        # Check if ffmpeg is available
+        ffmpeg_path = shutil.which("ffmpeg")
+        if not ffmpeg_path:
+            return {"success": False, "error": "ffmpeg not found. Please install ffmpeg."}
+        
+        # Check if node is available for yt-dlp
+        node_path = shutil.which("node")
+        
+        # Build yt-dlp command
+        cmd = [
+            "yt-dlp",
+            "-x",
+            "--audio-format", "mp3",
+            "--audio-quality", "0",
+            "--output", output_path,
+            "--no-playlist",
+            "--quiet",
+            "--no-warnings"
+        ]
+        
+        # Add js runtime if node is available
+        if node_path:
+            cmd.extend(["--js-runtimes", "node"])
+        
+        # Run download
         result = subprocess.run(
-            [
-                "yt-dlp",
-                "-x",
-                "--audio-format", "mp3",
-                "--audio-quality", "0",
-                "--output", output_path,
-                "--no-playlist",
-                "--quiet",
-                "--no-warnings",
-                url
-            ],
+            cmd + [url],
             capture_output=True,
             text=True,
             timeout=300  # 5 minutes for download
