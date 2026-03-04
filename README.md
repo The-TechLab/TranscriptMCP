@@ -25,10 +25,19 @@ This server can be used:
 ## Features
 
 - 📥 **Download YouTube Audio** — Extract audio from any YouTube video
-- 🎙️ **Transcribe with Whisper** — Local, free transcription using OpenAI Whisper
+- 🎙️ **Transcribe with Whisper** — Local, free transcription using Faster Whisper
 - 📝 **Multiple Output Formats** — Full transcript with timestamps or plain text
+- 💾 **Save Files** — Optionally save the downloaded MP3 and transcript files
 - 🔧 **MCP Compatible** — Works with any MCP-compliant AI assistant
 - 🆓 **100% Free** — No API keys required (uses local Whisper model)
+
+## Output Files
+
+By default, the server saves:
+- **Audio:** `{video_id}.mp3` in the temp directory
+- **Transcript:** `{video_id}.txt` in the workspace directory
+
+You can customize where files are saved by modifying the server code.
 
 ## Requirements
 
@@ -39,7 +48,7 @@ This server can be used:
 ### Python Packages
 - `mcp` — Model Context Protocol server
 - `yt-dlp` — YouTube downloader
-- `openai-whisper` — Speech recognition
+- `faster-whisper` — Lightning-fast Whisper transcription (recommended)
 
 ## Installation
 
