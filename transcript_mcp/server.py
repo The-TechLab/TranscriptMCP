@@ -103,28 +103,33 @@ def download_audio(url: str, output_path: str) -> dict:
 
 
 def transcribe_audio(audio_path: str, language: str = None) -> dict:
-    """Transcribe audio using Whisper"""
+    """Transcribe audio using Faster Whisper"""
     try:
-        import whisper
+        from faster_whisper import WhisperModel
         
         # Load model (cached after first load)
-        model = whisper.load_model(WHISPER_MODEL)
+        model = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
         
         # Transcribe
-        result = model.transcribe(audio_path, language=language)
+        segments, info = model.transcribe(audio_path, language=language)
+        
+        # Collect all text
+        text = ""
+        segments_list = []
+        for seg in segments:
+            text += seg.text + " "
+            segments_list.append({
+                "start": seg.start,
+                "end": seg.end,
+                "text": seg.text
+            })
         
         return {
             "success": True,
-            "text": result["text"],
-            "language": result.get("language", "unknown"),
-            "segments": [
-                {
-                    "start": seg["start"],
-                    "end": seg["end"],
-                    "text": seg["text"]
-                }
-                for seg in result.get("segments", [])
-            ]
+            "text": text.strip(),
+            "language": info.language,
+            "language_probability": info.language_probability,
+            "segments": segments_list
         }
     except Exception as e:
         return {"success": False, "error": str(e)}
