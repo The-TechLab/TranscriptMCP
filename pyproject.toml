@@ -1,0 +1,32 @@
+[project]
+name = "transcript-mcp"
+version = "1.0.0"
+description = "YouTube Video Transcription MCP Server - Download and transcribe YouTube videos using Whisper"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "The Tech Lab", url = "https://github.com/The-TechLab" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "yt-dlp>=2024.1.0",
+    "openai-whisper>=20231117",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+transcript-mcp = "transcript_mcp.server:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["transcript_mcp*"]
